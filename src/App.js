@@ -1,23 +1,29 @@
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react'
 import './App.css';
 
+const url = 'https://api.giphy.com/v1/gifs/search?api_key=8p9OsjDE3c9wTbtERSn3Gv6ZL8aR7fPO&q=panda&limit=10&offset=0&rating=g&lang=en'
+
 function App() {
+  const [gifs, setGifs] = useState()
+
+  useEffect(() => {
+    console.log('Actualizando los gifs')
+    fetch(url)
+      .then(res => res.json())
+      .then(response => {
+        const {data} = response
+        const gifs = data.map(image => image.images.downsized_medium.url)
+        setGifs(gifs)
+      })
+  }, [])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Giffy app
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <section className="App-content">
+        {
+          gifs.map(singleGif => <img src={singleGif} />)
+        }
+      </section>
     </div>
   );
 }
